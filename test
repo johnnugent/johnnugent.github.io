@@ -1,0 +1,1379 @@
+Latency and timeliness in multi-hop satellite
+networks
+Beatriz Soret
+†
+, Sucheta Ravikanti
+§
+and Petar Popovski
+†
+†
+Department of Electronic Systems, Aalborg University, Denmark
+§
+Department of Electrical Engineering, Indian Institute of Technology, Bombay
+Abstract—The classical deﬁnition of network delay has been
+recently augmented by the concept of information timeliness, or
+Age of Information (AoI). We analyze the network delay and the
+AoI in a multi-hop satellite network that relays status updates
+from satellite 1, receiving uplink trafﬁc from ground devices, to
+satellite K, using K−2 intermediate satellite nodes. The last node,
+K, is the closest satellite with connectivity to a ground station.
+The satellite formation is modeled as a queue network of M/M/1
+systems connected in series. The scenario is then generalized
+for the case in which all satellites receive uplink trafﬁc from
+ground, and work at the same time as relays of the packets from
+the previous nodes. The results show that the minimum average
+AoI is experienced at a decreasing system utilization when the
+number of nodes is increased. Furthermore, unloading the ﬁrst
+nodes of the chain reduces the queueing time and therefore the
+average AoI. These ﬁndings provide insights for designing multi-
+hop satellite networks for latency-sensitive applications.
+I. INTRODUCTION
+A well-known limitation of satellite communications is the
+inherent delay due to the large distances. Such propagation
+delay is highly reduced when using Low Earth Orbits (LEO),
+with altitudes between 500 and 2000 km, and propagation
+delays of few ms. Nevertheless, to ensure continuity in the
+coverage with a LEO satellite network, a ﬂying formation of
+many satellites is required, usually organized in a constellation
+with coordinated ground coverage. As a consequence, latency-
+sensitive information might suffer from long delays anyway,
+because several buffered-aided satellites are needed to connect
+two distant points on the Earth surface. The situation is
+illustrated in the example of Figure 1 (a). The ﬁrst satellite
+provides coverage to a remote area. Particularly, we address
+the scenario in which status updates are received in the
+uplink from, e.g., a massive number of IoT devices, and this
+information must be relayed as soon as possible to the closest
+ground station. Observe that the space segment works as a
+relay network where satellites are connected to each other via
+an inter-satellite link. The transmitted packet is downloaded
+by the closest satellite with a link to a ground station. A
+generalization is shown in Figure 1 (b), where all the satellites
+work as a relay and, at the same time, receive uplink status-
+updates from their coverage area. At each satellite k, the inter-
+satellite link is used to forward both the ground information
+from satellite k and the packets from satellites 1..k − 1.
+In multi-hop relay networks, the introduction of interme-
+diate nodes from transmitter to receiver has the drawback of
+additional latency [1] [2]. Beyond traditional network delay
+measures, the concept of Age of Information (AoI) was
+Fig. 1. Example of multi-hop relaying satellite network. (a) Only the ﬁrst
+satellite receives data from ground. (b) All satellites receive data from ground.
+introduced in [3] to better capture the timeliness of the received
+information. AoI measures the time that elapsed since the last
+received fresh update was generated at the source. Pertinent
+applications are those where a source generates updates that
+are transmitted through a communication network [4], like
+common satellite services that involve a certain tracking, such
+as containers in logistics. This is also relevant for Authenti-
+cation Identiﬁcation System (AIS) data from ships/vessels or
+the Automatic Dependent Surveillance - Broadcast (ADS-B)
+system in airplanes, as the end receiver is interested in the
+freshest update.
+The AoI metric has been studied under various conditions.
+The original paper from Kaul [3] analyzed a single G/G/1
+queue with exponential and deterministic distributions. The
+optimization based on AoI metrics of both the network and the
+senders’ updating policies has been discussed in [5] and [6].
+In [7], the problem of multi-hop networks with many source-
+destination pairs and interference constraints is addressed,
+and the optimal policy is reduced to solving the equivalent
+problem in which all source-destination pairs are just a single-
+978-1-7281-5089-5/20/$31.00 ©2020 IEEE
+Authorized licensed use limited to: Macquarie University. Downloaded on September 26,2020 at 06:14:31 UTC from IEEE Xplore. Restrictions apply.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Fig. 2. System model.
+hop away. [8] studies the average AoI of a tandem queue
+system (i.e., only two nodes), with a zero-waiting policy in
+the second node. This does not ﬁt the satellite scenario in
+which trafﬁc enters also from the intermediate nodes. In this
+paper, we address buffer-aided multi-hop networks like the
+ones depicted in Figure 1, used to relay information between
+two remote ground points. Imagine we have two satellites
+and only the second one has connectivity to a ground station.
+In that case, if all the uplink ground trafﬁc is received by
+the ﬁrst satellite, then all packets are queued up twice, in
+the ﬁrst and in the second satellite, respectively. In the other
+extreme, when the ground trafﬁc is only received by the second
+satellite, then the packets are queued up only in the second
+buffer. Our analysis captures the intermediate cases as well,
+and provides insights for designing constellations for latency-
+sensitive satellite services.
+In the rest of the paper, Section II presents the system
+model, Section III analyzes the average AoI when only the
+ﬁrst node receives uplink trafﬁc and the rest of nodes are just
+relays, Section IV generalizes to the case in which all satellites
+cover populated areas, and Section V discusses the conclusions
+and future directions of this work.
+II. S
+ETTING THE SCENE
+The satellite network consists of a total of K satellites (3
+in Figure 1) connected with an inter-satellite link (ISL). We
+assume the uplink trafﬁc from remote areas is transmitted to
+the space segment using the ﬁrst available satellite. If the
+information is delay-sensitive (e.g., status updates), then it
+must be routed as soon as possible to the destination, which
+is the closest satellite with current connection to a ground
+station or a ground gateway. The number of ground stations
+in satellite networks is often limited to one or few of them
+across the globe, and therefore it is common that several hops
+are required to reach the destination. The system is hence a
+multi-hop relay network where the last satellite in the group
+has a reachable ground station, and the other ones use the ISL
+to route the data. Each relay gets packets from the previous
+node and from ground, except for the ﬁrst node.
+This multi-hop satellite network is modeled as a queueing
+network connected in series, as shown in Figure 2. Satellite k
+collects and buffers packets from a total of U
+k
+ground devices
+located in its coverage area. If the load is equally shared among
+satellites, then U
+k
+= U ∀k. The ﬁrst node has only ground
+trafﬁc, but the intermediate nodes receive both trafﬁc from the
+previous node, to be relayed to the next one, and the own trafﬁc
+from ground. The last node, K, has connection to a ground
+station, and downloads all the received trafﬁc to the Earth.
+The transmission is ideal, with no packet drops, i.e., a node k
+receives all reports from node k − 1, which are forwarded to
+node k +1. Notice that trafﬁc from ground and from the ISL
+are stored in the same buffer, with no priorities among them.
+Each node is equipped with a buffer of inﬁnite capacity, ruled
+by a First Come First Served (FCFS) policy with no priorities
+among packets or links.
+The servers model the ISL between nodes, i.e., the wireless
+transmission, for nodes k =1..K − 1. In the last node, K, the
+server models instead the downlink to ground. In this initial
+study all the links are assumed to be equal, with a service rate
+μ
+=
+μ
+k
+,k
+=1
+, ..., K
+. The same service time means that all
+the links are equally characterized. The obvious extension is to
+consider the case in which the service rate μ
+K
+of the satellite-
+to-ground link is different from the service rates of the inter-
+satellite links; this is left for future work
+1
+. The service time
+of each satellite is the inverse of the service rate, S
+k
+=1/μ
+k
+.
+From ground, each device generates status updates at a
+Poisson rate λ
+ku
+. The aggregated trafﬁc received at node k is
+the sum of the trafﬁc received from U
+k
+devices and the trafﬁc
+received via the ISL with the previous node, and it follows a
+Poisson distribution as well. The rate at each node is
+λ
+k
+=
+
+
+U
+k
+u=1
+λ
+ku
+,k=1
+
+U
+k
+u=1
+λ
+ku
++ λ
+k−1
+,k>1
+(1)
+III. A
+VERAGE AGE OF INFORMATION WITH GROUND
+TRAFFIC IN THE FIRST NODE
+A. Analysis with K nodes
+We consider a satellite multi-hop network of K nodes like
+in Figure 1 (a). The ﬁrst satellite covering a remote area
+receives Poisson trafﬁc at an aggregated rate λ
+1
+from ground,
+and this trafﬁc is relayed using nodes 2, 3, ..., K. In this
+case, the arrival rate simpliﬁes to λ = λ
+1
+=
+
+U
+u=1
+λ
+1u
+and
+λ
+k
+= λ
+k−1
+,k>1 (no lost packets).
+An update is said to be fresh when its timestamp is the
+current time t and its age is zero. The age at the destination
+(the ground station) increases linearly in time in the absence
+of any updates, and is reset to a smaller value when an update
+is received. Deﬁne the AoI in the destination node K at time
+t as the random process Δ(t)=t − u(t).
+1
+The difference is that in our analysis we sum exponential random variables
+of the same rate, which gives an Erlang distribution. If each link has its own
+rate, then the distribution is a Hypoexponential
+Authorized licensed use limited to: Macquarie University. Downloaded on September 26,2020 at 06:14:31 UTC from IEEE Xplore. Restrictions apply.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+Fig. 3. Evolution of the Age of information in a queue network with K nodes.
+The network times T
+i
+are deﬁned as the total time spent in the system, since
+arrival in node 1 until departure in node K.
+The evolution of the AoI Δ(t) at the destination under a
+FCFS policy exhibits the sawtooth pattern plotted in Figure
+3. Without loss of generality, the system is ﬁrst observed at
+t =0and the queue is empty with Δ(0) = Δ
+0
+. Index i is for
+packet i. Status update i is generated at time t
+i
+and is received
+by the destination at time t
+
+i
+. Deﬁne Y
+i
+as the interarrival time
+Y
+i
+= t
+i
+− t
+i−1
+between two packets; Z
+i
+as the interdeparture
+time Z
+i
+= t
+
+i
+− t
+
+i−1
+; and T
+i
+as the total network time in the
+system T
+i
+= t
+
+i
+−t
+i
+. The latter includes the time spent in all the
+nodes (queueing time and transmission time) until departure
+from the system at node K. This is different from [8], where
+the times are deﬁned within a single buffered system. In our
+case, the network is as a connection of M/M/1 systems, where
+only the ﬁrst one gets external load.
+To evaluate the average AoI, the strategy is to calculate the
+area under Δ(t), or the time average AoI, as
+Δ
+T
+=
+1
+T
+⎛
+⎝
+Q
+ini
++ Q
+last
++
+N(T )
+
+i=2
+Q
+i
+⎞
+⎠
+(2)
+where N(T ) is the number of arrivals by time T . The average
+AoI
+¯
+Δ is given by the limit
+¯
+Δ = lim
+T→∞
+Δ
+T
+.
+As deﬁned in Figure 3, Q
+i
+(i>1) are trapezoids whose ar-
+eas can be calculated as the differences between two isosceles
+triangles [8], i.e.,
+Q
+i
+=
+1
+2
+(T
+i
++ Y
+i
+)
+2
+−
+1
+2
+T
+2
+i
+= Y
+i
+T
+i
++
+Y
+2
+i
+2
+(3)
+The average AoI
+¯
+Δ can be expressed
+¯
+Δ=λE[Q
+i
+]=λ
+
+E[T
+i
+Y
+i
+]+E
+
+1
+2
+Y
+2
+i
+
+(4)
+where λ = lim
+T→∞
+N(T )
+T
+is the steady state rate of status
+updates generation. Ergodicity has been assumed for the
+stochastic process Δ(t), but not assumptions regarding the
+distribution of the random variables Y and T have been made.
+The second term in equation (4), E
+
+1
+2
+Y
+2
+i
+
+, is easily ob-
+tained as
+E
+
+1
+2
+Y
+2
+i
+
+=
+1
+λ
+2
+(5)
+For the ﬁrst term, E[T
+i
+Y
+i
+], notice that the total system time
+of packet i is the sum of the system times in each of the nodes
+1, 2, ...K, and each of them can be decomposed in waiting and
+service time
+T
+i
+= W
+i,1
++ S
+i,1
++ W
+i,2
++ S
+i,2
++ ... + W
+i,K
++ S
+i,K
+(6)
+We rewrite this term to get
+E[T
+i
+Y
+i
+]=E[(W
+i
++ S
+i
+)Y
+i
+]=E[W
+i
+Y
+i
+]+E[S
+i
+]E[Y
+i
+]
+= E[W
+i
+Y
+i
+]+
+K
+
+k=1
+E[S
+i,k
+]E[Y
+i
+] (7)
+The whole waiting time in the system is given by W
+i,1
++
+... + W
+i,k
+. When packet i arrives to the system there are two
+scenarios. Let us take the simplest case of two nodes. The
+ﬁrst situation is that packet i − 1 has already left the system
+when i is generated, then W
+i
+=0. In the second possibility,
+packet i − 1 leaves the system after the arrival of packet i.It
+can happen that when packet i − 1 leaves the system, packet
+i is in the ﬁrst server; or it is waiting in the second queue. If
+packet i does not ﬁnd the last queue empty, we can write the
+total waiting time of packet i in the general case of K nodes
+as:
+W
+i
+=
+
+T
+i−1
+− Y
+i
+−
+K−1
+
+k=0
+S
+i,k
+
++
+=
+
+T
+i−1
+− Y
+i
+− S
+\K
+
++
+(8)
+where we have deﬁned S
+\K
+=
+
+K−1
+k=1
+S
+i,k
+. Notice also that
+the time in equation (8) is the total time spent in queues across
+the network, one or all of them, and it is a lower bound given
+the assumption of non-empty last queue.
+When the system reaches steady state the system times are
+stochastically identical, that is T =
+st
+T
+i
+=
+st
+T
+i−1
+.
+We can now write the conditional expected waiting time,
+E[W
+i
+|Y
+i
+= y + S
+\K
+]=E[(T − y − S
+\K
+)
++
+] (9)
+To solve equation (9), we need the distribution of the system
+time. If the system is not saturated, i.e., if the server utilization
+in each M/M/1 meets the condition ρ
+k
+= λ/μ
+k
+< 1, then
+Burke’s theorem can be applied [9]. This means that the
+departure process from satellite k is also Poisson.
+The service rates are equal across the network and, under
+no saturation, the arrival rate at queue k is the same as queue
+k − 1. Therefore, we can conclude that the server utilization
+is also equal for all nodes and deﬁne ρ
+k
+= ρ =
+λ
+μ
+∀k.We
+deﬁne α = μ(1 − ρ) to be the parameter of the exponential
+distribution of a single M/M/1 stage, f
+T
+M/M/1
+(t)=αte
+−αt
+.
+With K nodes, the probability distribution function (pdf) of
+the total network time is the sum of i.i.d. exponential variables
+of the same rate α, i.e., an Erlang distribution
+f
+T
+(t)=
+α
+K
+t
+K−1
+e
+−αt
+(K − 1)!
+(10)
+Authorized licensed use limited to: Macquarie University. Downloaded on September 26,2020 at 06:14:31 UTC from IEEE Xplore. Restrictions apply.
+The mean of the distribution is the network delay, E[T ],
+given by [9]
+E[T ]=
+K
+α
+(11)
+The conditional expected waiting time is
+E[W
+i
+|Y
+i
+= y, S
+\K
+= s]=E[(T − y − s)
++
+]
+=
+
+∞
+y+s
+(t − y − s)
+α
+K
+t
+K−1
+(K − 1)!
+e
+−αt
+dt
+=
+Γ(K +1,α(y + s))
+αΓ(K)
+−
+(y + s) · Γ(K, α(y + s))
+Γ(K)
+(12)
+where Γ(s, x)=
+
+∞
+x
+t
+s−1
+e
+−t
+dt is the upper incomplete
+gamma function, and Γ(s)=
+
+∞
+0
+t
+s−1
+e
+−t
+dt is the ordinary
+gamma function.
+We apply the law of total probability to uncondition equa-
+tion (12) on Y
+i
+, and use the exponential interarrival time
+f
+Y
+i
+(y)=λe
+−λy
+to obtain the expectation
+E[W
+i
+Y
+i
+|S
+\K
+= s]=
+
+∞
+0
+yE
+
+W
+i
+|Y
+i
+= y, S
+\K
+= s
+
+f
+Y
+i
+(y)dy.
+(13)
+We notice that by using the average E[S
+\K
+]=
+K−1
+μ
+instead
+of unconditioning equation (13) on S
+\K
+, we obtain a lower
+bound of the desired expectation E[W
+i
+Y
+i
+], with the result
+given in equation (14).
+The last term in equation (7) is easily obtained as
+
+K
+k=1
+E[S
+i,k
+]E[Y
+i
+]=
+K
+μλ
+.
+And the expectation E[T
+i
+Y
+i
+] yields
+E[T
+i
+Y
+i
+]=E[W
+i
+Y
+i
+]+
+K
+μλ
+(15)
+The average AoI for K nodes can be ﬁnally bounded by
+¯
+Δ=λ
+
+E[W
+i
+Y
+i
+]+
+K
+μλ
++
+1
+λ
+2
+
+(16)
+where E[W
+i
+Y
+i
+] is lower bounded by equation (14).
+B. Numerical evaluation
+The results are numerically evaluated and compared to
+MATLAB simulations of the system. First, Figure 4 shows
+the network delay of equation (11) as a function of the system
+utilization load ρ and for various values of K. The baseline
+case K =1is also plotted for reference. As expected, E[T ]
+increases with the system utilization and the number of nodes.
+More interestingly, Figure 5 plots the lower bound of the
+average AoI for the same setting.
+¯
+Δ increases with the number
+of relaying nodes. The baseline case K =1was ﬁrst provided
+in [3]. The lower bound is very tight and it approximates
+almost perfectly the simulation results. This indicates that the
+variability of the service time has not a big impact in
+¯
+Δ.For
+ﬁxed service rate μ, we can minimize
+¯
+Δ with respect to the
+arrival rate λ or, equivalently, to the system utilization ρ. In the
+case of K =1this minimum is attained at ρ
+∗
+≈ 0.53 [3]. As
+K increase, the minimum ρ
+∗
+diminishes, as shown in Figure
+6. For example, with 10 hops the optimal age is achieved by
+choosing a λ that biases the server towards being busy less
+than 30 % of the time.
+IV. A
+VERAGE AGE OF INFORMATION WITH GROUND
+TRAFFIC IN ALL NODES
+We extend the scenario in Section III to the case in which
+the intermediate nodes do receive trafﬁc from ground (Figure
+1 (b)), i.e., λ
+k
+=
+
+U
+u=1
+λ
+ku
++ λ
+k−1
+,k>1. The analysis
+considers the total network trafﬁc, therefore it is possible that
+packet i is received by satellite k before packet i − 1 because
+packet i is received by a satellite which is closer to k.
+A. Analysis with two nodes
+Let us examine the simplest case of two nodes, K =2.We
+deﬁne λ = λ
+1
++ λ
+2
+to be the total arrival rate to the system,
+and p to be the proportion of arrival rate in the ﬁrst node, i.e.,
+λ
+1
+= pλ and λ
+2
+=(1− p)λ. Therefore, the utilization in the
+second satellite is limited to ρ
+2
+=(λ
+1
++ λ
+2
+)/μ = λ/μ = ρ.
+To address this case, we notice that a packet leaving the
+system has a probability p of coming originally from the ﬁrst
+node, and a probability 1−p of coming from the second node.
+Therefore, we calculate the average age as
+¯
+Δ=p
+¯
+Δ
+node 1
++(1− p)
+¯
+Δ
+node 2
+(17)
+where we deﬁne
+¯
+Δ
+node 1
+as the average AoI of a packet that
+arrives at node 1, and
+¯
+Δ
+node 2
+for a packet arriving at node 2.
+The packet arriving at node 2 sees the system as a single
+M/M/1, and therefore
+¯
+Δ
+node 2
+is written as the average AoI of
+an M/M/1 system with a total arrival rate
+λ
+, given in [3] as
+¯
+Δ
+node 2
+= λ
+
+ρ
+μ
+2
+(1 − ρ)
++
+1
+μλ
++
+1
+λ
+2
+
+(18)
+Instead, a packet arriving to the ﬁrst node ﬁnds two M/M/1
+systems connected in series. The two M/M/1 stages are not
+equal, as it was the case in Section III, because the load in
+the second node is higher. This changes the distribution of the
+network time and therefore the AoI. The pdf of the network
+time is obtained as the pdf of the sum of two independent
+exponential variables with different rate α
+k
+, i.e.,
+f
+T
+(t)=
+α
+1
+α
+2
+α
+1
+− α
+2
+(e
+−α
+2
+t
+− e
+−α
+1
+t
+) (19)
+where α
+k
+= μ
+k
+(1 − ρ
+k
+).
+Like in Section III, we calculate the conditional expected
+waiting time in this new scenario, which yields
+E[W
+i
+|Y
+i
+= y, S
+\2
+= s]=
+α
+1
+e
+−α
+2
+(y+s)
+α
+2
+(α
+1
+− α
+2
+)
+−
+α
+2
+e
+−α
+1
+(y+s)
+α
+1
+(α
+1
+− α
+2
+)
+(20)
+In this two-nodes case, S
+\2
+= S
+1
+, i.e., the sum of all the
+service times except the last node is just the service time of the
+ﬁrst node. The expectation E[W
+i
+Y
+i
+] for these packets arriving
+to the ﬁrst satellite is lower bounded by
+E[W
+i
+Y
+i
+] ≤−
+α
+1
+λe
+−α
+2
+S
+\2
+α
+2
+(α
+1
+− α
+2
+)(α
+2
++ λ)
+2
++
+α
+2
+λe
+−α
+1
+S
+\2
+α
+1
+(α
+1
+− α
+2
+)(α
+1
++ λ)
+2
+(21)
+The average AoI of packets arriving at node 1 is
+¯
+Δ
+node 1
+= λ
+
+E[W
+i
+Y
+i
+]+
+2
+μλ
++
+1
+λ
+2
+
+(22)
+Authorized licensed use limited to: Macquarie University. Downloaded on September 26,2020 at 06:14:31 UTC from IEEE Xplore. Restrictions apply.
+E[W
+i
+Y
+i
+] ≤
+−1
+αλ
+2
+Γ(K)
+
+α(λS
+\K
++2)Γ(K, αS
+\K
+) − λΓ(K +1,αS
+\K
+)
+
+−
+α
+K
+μ
+−K
+e
+λS
+\K
+λ
+2
+μΓ(K)
+·
+
+μ(λS
+\K
+− 2)Γ(K, μS
+\K
+) − λΓ(K +1,μS
+\K
+)
+
+(14)
+0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
+0
+5
+10
+15
+20
+25
+30
+average network delay
+K = 1
+K = 2
+K = 4
+K = 6
+analysis
+sims
+Fig. 4. Network delay for K nodes versus the system utilization. μ
+k
+=1∀k.
+where
+E
+[
+W
+i
+Y
+i
+]
+is given by equation (21).
+The mean network delay, E[T ], is calculated as
+E[T ]=p
+
+1
+α
+1
++
+1
+α
+2
+
++(1− p)
+
+1
+α
+2
+
+(23)
+The two extreme cases of this two-node scenario are easily
+obtained. When p =1, all the ground load comes from the ﬁrst
+satellite, and the AoI is given by equation (16) with K =2.
+When p =0, all the load is in the second satellite, and the
+system reduces to an M/M/1 whose AoI is given in [3].
+B. Numerical evaluation
+Figures 7 and 8 show the network delay in equation (23)
+and the average AoI of equation (17) for two nodes, increasing
+values of ρ and different values of p. The simulated results and
+the two bounds p =0and p =1are also plotted for reference.
+As expected, the average AoI
+¯
+Δ in Figure 8 is within the two
+bounds. When the system utilization is low, many packets do
+not experience queueing in the ﬁrst and second satellite (i.e.,
+the server is empty), and therefore the differences in delays
+and AoI is reduced to the service times. Since we are using
+a normalized value μ = μ
+k
+=1, the minimum difference
+between queueing up in one or two buffers is 1. This is visible,
+e.g., in Figure 8, where the difference between the curves of
+p =0and p =1converges to 1 as ρ tends to zero. As ρ
+increases, the positive impact of moving devices to the second
+node is more noticeable. For instance, moving 20% of the total
+load to the second node reduces the average AoI by ≈10% at
+0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
+0
+5
+10
+15
+20
+25
+30
+average AoI
+K = 1
+K = 2
+K = 4
+K = 6
+analysis
+sims
+Fig. 5. Average AoI for K nodes versus the system utilization. μ
+k
+=1∀k.
+12345678910
+K
+0.25
+0.3
+0.35
+0.4
+0.45
+0.5
+0.55
+*
+Fig. 6. System utilization that minimizes the AoI for increasing number of
+nodes.
+ρ =0.5 (i.e., the server is idle half of the time), and by ≈35%
+at ρ =0.9. Also, ρ
+∗
+decreases slowly as p is increased.
+Finally, Figure 9 plots the simulation evaluation of
+¯
+Δ for
+increasing values of ρ and K, when all the nodes are equally
+loaded from ground, i.e., λ
+1
+= λ
+2
+= .... Naturally, the last
+node is the bottleneck, because it receives the trafﬁc from
+ground and the aggregated trafﬁc to be relayed from satellites
+Authorized licensed use limited to: Macquarie University. Downloaded on September 26,2020 at 06:14:31 UTC from IEEE Xplore. Restrictions apply.
+0.2 0.3 0.4 0.5 0.6 0.7 0.8
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+average network delay
+analysis
+sims
+p = 0
+p = 0.2
+p = 0.3
+p = 0.5
+p = 0.6
+p = 0.8
+p = 1
+Fig. 7. Network delay for 2 nodes each of them receiving trafﬁc from ground,
+versus the system utilization. μ
+k
+=1∀k; λ
+1
+= pλ; λ
+2
+=(1− p)λ.
+1, 2, ...K − 2. Δ increases as the number of satellite nodes
+gets larger, and the system utilization that minimizes the AoI
+is also decreased with K, similarly as the behaviour without
+trafﬁc in the intermediate nodes that was shown in Figure 6.
+V. C
+ONCLUSIONS
+In this paper, we have analyzed the average AoI in a multi-
+hop satellite network, where status updates have to be relayed
+from satellite 1 to satellite K with connectivity to a ground
+station. We have generalized the AoI deﬁnition to include a
+connection of M/M/1 queues, and quantiﬁed the increase in
+average AoI when the number of satellite nodes grows. We
+then extend the study to address the situation in which each
+of the satellite in the network can receive status updates from
+ground, and therefore the last satellite in the sequence is the
+most congested node. The performance evaluations in terms
+of number of nodes, distribution of the load among satellites
+and freshness reveals interesting tradeoffs that are relevant to
+the design and dimensioning of multi-hop satellite networks.
+The system utilization (or, equivalently, the arrival rate) that
+minimizes the average AoI decreases as the number of hops
+increases. The inﬂuence of the packet drops and the tradeoffs
+between reliability and freshness are left for future work.
+A
+CKNOWLEDGMENT
+This work has been in part supported by the European
+Research Council (ERC Consolidator Grant no. 648382 WIL-
+LOW). The authors would like to thank Kristian J. Tilsted and
+Federico Chiariotti from Aalborg University for their help.
+R
+EFERENCES
+[1] G. Khanna and S. K. Chaturvedi, “A comprehensive survey on multi-
+hop wireless networks: Milestones, changing trends and concomitant
+challenges,” Wireless Personal Communications, vol. 101, no. 2, pp. 677–
+722, Jul 2018.
+0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
+2
+4
+6
+8
+10
+12
+14
+16
+18
+20
+average AoI
+analysis
+sims
+p = 0
+p = 0.2
+p = 0.3
+p = 0.5
+p = 0.6
+p = 0.8
+p = 1
+Fig. 8. Average AoI for 2 nodes each of them receiving trafﬁc from ground,
+versus the system utilization. μ
+k
+=1∀k; λ
+1
+= pλ; λ
+2
+=(1− p)λ
+0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9
+2
+4
+6
+8
+10
+12
+14
+16
+18
+average AoI
+K =1
+K =2
+K =4
+K =6
+Fig. 9. Simulated average AoI for K nodes each of them receiving trafﬁc
+from ground, versus the system utilization. μ
+k
+=1∀k
+[2] G. Y. et al., “Trafﬁc allocation for low-latency multi-hop networks with
+buffers,” IEEE Trans. on Comms., vol. 66, no. 9, pp. 3999–4013, Sep.
+2018.
+[3] S. Kaul, R. Yates, and M. Gruteser, “Real-time status: How often should
+one update?” in 2012 Proceedings IEEE INFOCOM, March 2012.
+[4] ——, “On piggybacking in vehicular networks,” in 2011 Proceedings
+IEEE GLOBECOM, Dec 2011, pp. 1–5.
+[5] Y. S. et al., “Update or wait: How to keep your data fresh,” IEEE Trans.
+on Information Theory, vol. 63, no. 11, pp. 7492–7508, Nov 2017.
+[6] R. D. Yates, “Lazy is timely: Status updates by an energy harvesting
+source,” in 2015 Proceedings IEEE ISIT, June 2015, pp. 3008–3012.
+[7] R. Talak, S. Karaman, and E. Modiano, “Minimizing age-of-information
+in multi-hop wireless networks,” in 2017 55th Annual Allerton Conference
+on Communication, Control, and Computing, Oct 2017.
+[8] Q. K. et al., “Age-of-information for computation-intensive messages in
+mobile edge computing,” in arXiv:1901.01854, Jan 2019.
+[9] P. J. Burke, “The output of a queueing system,” Operations Research,
+vol. 4, no. 6, pp. 699–704, 1956.
+Authorized licensed use limited to: Macquarie University. Downloaded on September 26,2020 at 06:14:31 UTC from IEEE Xplore. Restrictions apply.
